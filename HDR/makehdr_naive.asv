@@ -1,0 +1,20 @@
+
+image = im2double(imread('./samples/urn.jpg'));
+
+hdr1 = hdr(image);
+
+
+
+function hdr = makehdr_naive(ldrs, exposures)
+    % ldrs is an height x width x 3chanels x imagespage matrix which can be created with ldrs = cat(4, ldr1, ldr2, ...);
+    % exposures is a vector of exposure times (in seconds) corresponding to ldrs
+    [exposures,sortexp] = sort(reshape(exposures,1,1,1,[]));
+    ldrs = ldrs(:,:,:,sortexp); %Sort exposures from dark to light
+
+    %Create naive HDR here
+    hdr_image =  mean(ldrs, 4);
+    result1 = tonemap(hdr_image, 'AdjustSaturation', 3.0);
+    
+    figure();
+    imshow(result1);
+end
